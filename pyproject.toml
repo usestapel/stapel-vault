@@ -1,0 +1,82 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stapel-vault"
+version = "0.1.0"
+description = "Production secret storage for the Stapel framework — OpenBao/HashiCorp Vault behind the stapel-core secret-provider seam"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+keywords = ["django", "stapel", "vault", "openbao", "secrets", "kv"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Framework :: Django",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security",
+    "Typing :: Typed",
+]
+# The provider plugs into the stapel_core.secrets SecretProvider seam, which
+# ships in the core release AFTER 0.8.0 (currently in core's [Unreleased]).
+# Pin honestly to the version that will carry the seam (>=0.9,<0.10). Until
+# stapel-core 0.9 is on PyPI this pin points into the void, so the CI
+# release-track job below is advisory (continue-on-error). Flip it to blocking
+# once stapel-core 0.9 is published. Note: the Vault HTTP client itself uses
+# only the stdlib (urllib) — no hvac, no requests — so this is the sole
+# runtime dependency.
+dependencies = [
+    "stapel-core>=0.9,<0.10",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    # Django is only needed to exercise the STAPEL_VAULT settings-override path
+    # (config resolution is env-first and works without Django).
+    "Django>=5.1",
+]
+all = []
+
+[project.urls]
+Homepage = "https://github.com/usestapel/stapel-vault"
+Repository = "https://github.com/usestapel/stapel-vault"
+Documentation = "https://github.com/usestapel/stapel-vault#readme"
+Changelog = "https://github.com/usestapel/stapel-vault/blob/main/CHANGELOG.md"
+Issues = "https://github.com/usestapel/stapel-vault/issues"
+
+[tool.setuptools]
+package-dir = {"stapel_vault" = "."}
+# Only the package ships in the wheel — tests stay out (library-standard §7.5).
+packages = ["stapel_vault"]
+
+[tool.setuptools.package-data]
+stapel_vault = ["py.typed"]
+
+[tool.ruff]
+target-version = "py311"
+
+[tool.ruff.lint]
+# Single source for the git hooks and CI (they pass the same flags on the CLI).
+select = ["E", "F", "W"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+django_find_project = false
+addopts = "--tb=short -q --import-mode=importlib"
+markers = [
+    "vault_integration: smoke test against a real OpenBao/Vault (opt-in; needs VAULT_ADDR + VAULT_TOKEN, run with -m vault_integration)",
+]
+
+[tool.coverage.run]
+omit = [
+    "*/tests/*",
+    "*/conftest.py",
+]

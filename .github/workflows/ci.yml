@@ -1,0 +1,92 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install stapel-core
+        # The SecretProvider seam this package plugs into ships in the core
+        # release after 0.8.0 (currently core [Unreleased]); install from main
+        # until stapel-core 0.9 is on PyPI.
+        run: pip install git+https://github.com/usestapel/stapel-core.git
+
+      - name: Install
+        run: pip install -e ".[dev]" --no-deps || pip install -e . --no-deps
+
+      - name: Lint
+        run: |
+          pip install ruff --quiet
+          ruff check . --select E,F,W --ignore E501
+
+      - name: Import check
+        run: python -c "import stapel_vault; print('import OK')"
+
+      - name: Install test dependencies
+        run: pip install pytest pytest-cov
+
+      - name: Tests with coverage
+        # The vault_integration marker is opt-in (needs a live Vault); the
+        # test itself skipif's on VAULT_ADDR/VAULT_TOKEN, so it is simply
+        # skipped here.
+        run: |
+          pytest tests/ \
+            --cov=stapel_vault \
+            --cov-report=term-missing \
+            --cov-report=xml \
+            --junitxml=junit.xml \
+            -o junit_family=legacy \
+            -v
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        with:
+          files: coverage.xml
+          flags: stapel-vault
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test results to Codecov
+        uses: codecov/test-results-action@v1
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  release-track:
+    # Release gate — library-standard §7.4. Installs the package the way an end
+    # user does: dependencies resolved from PyPI strictly by the declared pins.
+    #
+    # ADVISORY (continue-on-error) until stapel-core 0.9 is on PyPI: the pin is
+    # stapel-core>=0.9,<0.10 (the release that will carry the SecretProvider
+    # seam), which does not resolve from PyPI yet. Flip this job to blocking
+    # (remove continue-on-error, assert the 0.9 window) once core 0.9 ships —
+    # a green run is then a precondition for a vX.Y.Z tag (library-standard §7.5).
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install as an end user (deps resolved from PyPI by pin)
+        run: pip install .
+      - name: Import smoke (installed package, from a clean dir)
+        run: cd "$RUNNER_TEMP" && python -c "import stapel_vault; print('release-track import OK')"
