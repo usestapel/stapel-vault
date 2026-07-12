@@ -19,8 +19,8 @@ jobs:
           cache: pip
 
       - name: Install stapel-core
-        # Until stapel-core 0.9 (the SecretProvider seam) is on PyPI, install
-        # from main. Switch to the pinned PyPI resolution once 0.9 ships.
+        # git-main, same as every other pair's test job — release-track (ci.yml)
+        # is the gate that validates the PyPI-pinned resolution.
         run: pip install git+https://github.com/usestapel/stapel-core.git
 
       - name: Install

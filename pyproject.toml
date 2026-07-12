@@ -23,16 +23,13 @@ classifiers = [
     "Topic :: Security",
     "Typing :: Typed",
 ]
-# The provider plugs into the stapel_core.secrets SecretProvider seam, which
-# ships in the core release AFTER 0.8.0 (currently in core's [Unreleased]).
-# Pin honestly to the version that will carry the seam (>=0.9,<0.10). Until
-# stapel-core 0.9 is on PyPI this pin points into the void, so the CI
-# release-track job below is advisory (continue-on-error). Flip it to blocking
-# once stapel-core 0.9 is published. Note: the Vault HTTP client itself uses
-# only the stdlib (urllib) — no hvac, no requests — so this is the sole
-# runtime dependency.
+# The provider plugs into the stapel_core.secrets SecretProvider seam,
+# published in stapel-core 0.10.0 (the seam landed before 0.9 was skipped in
+# favor of 0.10 — pin follows the actual published floor). Note: the Vault
+# HTTP client itself uses only the stdlib (urllib) — no hvac, no requests —
+# so this is the sole runtime dependency.
 dependencies = [
-    "stapel-core>=0.9,<0.10",
+    "stapel-core>=0.10,<0.11",
 ]
 
 [project.optional-dependencies]

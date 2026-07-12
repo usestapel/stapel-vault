@@ -71,15 +71,13 @@ jobs:
 
   release-track:
     # Release gate — library-standard §7.4. Installs the package the way an end
-    # user does: dependencies resolved from PyPI strictly by the declared pins.
-    #
-    # ADVISORY (continue-on-error) until stapel-core 0.9 is on PyPI: the pin is
-    # stapel-core>=0.9,<0.10 (the release that will carry the SecretProvider
-    # seam), which does not resolve from PyPI yet. Flip this job to blocking
-    # (remove continue-on-error, assert the 0.9 window) once core 0.9 ships —
-    # a green run is then a precondition for a vX.Y.Z tag (library-standard §7.5).
+    # user does: dependencies (incl. stapel-core) resolved from PyPI strictly by
+    # the declared pins — no git-main core, no editable siblings. Catches "pin
+    # into the void" and drift between the core branch and the published wheel.
+    # Blocking (library-standard §7.5): stapel-core 0.10.0 (carrying the
+    # SecretProvider seam) is on PyPI, so a green run here is a precondition
+    # for a vX.Y.Z tag.
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -88,5 +86,7 @@ jobs:
           cache: pip
       - name: Install as an end user (deps resolved from PyPI by pin)
         run: pip install .
+      - name: Verify stapel-core resolved from PyPI inside the 0.10 window
+        run: cd "$RUNNER_TEMP" && python -c "import importlib.metadata as m; v=m.version('stapel-core'); print('stapel-core', v); assert tuple(map(int, v.split('.')[:2]))==(0,10), v"
       - name: Import smoke (installed package, from a clean dir)
         run: cd "$RUNNER_TEMP" && python -c "import stapel_vault; print('release-track import OK')"
