@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [0.1.1] — 2026-07-17
+
+### Changed
+- `stapel-core` ceiling raised `>=0.10,<0.11` → `>=0.10,<0.12` (core 0.11
+  fleet re-pin: default bus, nav, config-checks, error params/language —
+  additive for modules). Suite green as-is.
+
 ### Added — initial release (0.1.0): OpenBao/HashiCorp Vault secret provider
 
 - **`VaultSecretProvider`** — implements the `stapel_core.secrets` provider

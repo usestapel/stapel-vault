@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "stapel-vault"
-version = "0.1.0"
+version = "0.1.1"
 description = "Production secret storage for the Stapel framework — OpenBao/HashiCorp Vault behind the stapel-core secret-provider seam"
 readme = "README.md"
 license = { text = "MIT" }
@@ -29,7 +29,7 @@ classifiers = [
 # HTTP client itself uses only the stdlib (urllib) — no hvac, no requests —
 # so this is the sole runtime dependency.
 dependencies = [
-    "stapel-core>=0.10,<0.11",
+    "stapel-core>=0.10,<0.12",
 ]
 
 [project.optional-dependencies]
