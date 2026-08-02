@@ -1,5 +1,12 @@
 # stapel-vault
 
+[![CI](https://img.shields.io/github/actions/workflow/status/usestapel/stapel-vault/ci.yml?branch=main&logo=github&label=CI)](https://github.com/usestapel/stapel-vault/actions/workflows/ci.yml?query=branch%3Amain)
+[![coverage](https://img.shields.io/codecov/c/github/usestapel/stapel-vault?branch=main&logo=codecov&label=coverage)](https://app.codecov.io/gh/usestapel/stapel-vault)
+[![pypi](https://img.shields.io/pypi/v/stapel-vault?logo=pypi&logoColor=white&label=pypi)](https://pypi.org/project/stapel-vault/)
+[![downloads](https://static.pepy.tech/badge/stapel-vault/month)](https://pepy.tech/project/stapel-vault)
+[![python](https://img.shields.io/pypi/pyversions/stapel-vault?logo=python&logoColor=white)](https://pypi.org/project/stapel-vault/)
+[![license](https://img.shields.io/github/license/usestapel/stapel-vault)](https://github.com/usestapel/stapel-vault/blob/main/LICENSE)
+
 Production secret storage for the [Stapel framework](https://github.com/usestapel).
 A facade over secret backends behind the `stapel_core.secrets` provider seam —
 the first backend is **OpenBao / HashiCorp Vault** (KV v2; their HTTP APIs are
