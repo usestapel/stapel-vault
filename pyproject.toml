@@ -39,7 +39,10 @@ dev = [
     "pytest-cov>=4.1",
     # Django is only needed to exercise the STAPEL_VAULT settings-override path
     # (config resolution is env-first and works without Django).
-    "Django>=5.1",
+    # Та же граница, что в stapel-core: Django 6.1 убрал приватный
+    # cc_delim_re, который импортирует rest_framework/views.py (включая
+    # DRF 3.17.2). Снять вместе с корой.
+    "Django>=5.1,<6.1",
 ]
 all = []
 
