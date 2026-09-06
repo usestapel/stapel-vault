@@ -20,6 +20,13 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
 
+      - name: Install stapel-core (declared range, from PyPI)
+        # The Install step below is --no-deps (it must not repin core while
+        # testing this package locally), so stapel-core — and its own
+        # transitive deps such as Django — has to be resolved explicitly
+        # here, from the range this package declares in pyproject.toml.
+        run: pip install "stapel-core>=0.10,<1.0"
+
       - name: Install
         run: pip install -e ".[dev]" --no-deps || pip install -e . --no-deps
 
