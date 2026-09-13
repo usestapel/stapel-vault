@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "stapel-vault"
-version = "0.1.3"
+version = "0.1.4"
 description = "Production secret storage for the Stapel framework — OpenBao/HashiCorp Vault behind the stapel-core secret-provider seam"
 readme = "README.md"
 license = { text = "MIT" }
@@ -39,10 +39,10 @@ dev = [
     "pytest-cov>=4.1",
     # Django is only needed to exercise the STAPEL_VAULT settings-override path
     # (config resolution is env-first and works without Django).
-    # Та же граница, что в stapel-core: Django 6.1 убрал приватный
-    # cc_delim_re, который импортирует rest_framework/views.py (включая
-    # DRF 3.17.2). Снять вместе с корой.
-    "Django>=5.1,<6.1",
+    # The `<6.1` bound came from stapel-core and was retired with it: DRF
+    # 3.18.0 dropped the `cc_delim_re` import that Django 6.1 removed.
+    # Floor follows stapel-core's `Django>=5.2`; 5.1 is EOL.
+    "Django>=5.2,<7.0",
 ]
 all = []
 
