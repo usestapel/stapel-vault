@@ -39,7 +39,7 @@ jobs:
         run: python -c "import stapel_vault; print('import OK')"
 
       - name: Install test dependencies
-        run: pip install pytest pytest-cov
+        run: pip install pytest pytest-cov "stapel-tools>=0.27,<1"
 
       - name: Tests with coverage
         # The vault_integration marker is opt-in (needs a live Vault); the
@@ -103,7 +103,7 @@ jobs:
         run: python -c "import stapel_vault; print('import OK')"
 
       - name: Install test dependencies
-        run: pip install pytest pytest-cov
+        run: pip install pytest pytest-cov "stapel-tools>=0.27,<1"
 
       - name: Tests with coverage
         # The vault_integration marker is opt-in (needs a live Vault); the

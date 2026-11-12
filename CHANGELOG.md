@@ -1,6 +1,15 @@
 # Changelog
 
-## [Unreleased]
+## [Unreleased] — proposed 0.1.5
+
+### Added — `docs/capabilities.json`, emitted and drift-gated
+
+Built the way stapel-core's is (`stapel_tools.surface`): provides,
+extension points and requires from the curated `docs/capabilities.meta.json`,
+the usage surface (`load_config`, `map_name`) derived by AST, module/version
+from `pyproject.toml`. `make contract` / `make contract-check`, and
+`tests/test_capabilities.py` under pytest (CI now installs stapel-tools for
+it). The wheel ships the document.
 
 ## [0.1.2] — 2026-07-17
 

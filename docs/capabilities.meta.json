@@ -1,0 +1,44 @@
+{
+  "_comment": "Hand-curated layer of docs/capabilities.json, built the way stapel-core's is (stapel_tools.surface: `make contract`). This library has no Django settings namespace of axes and no HTTP surface, so axes is empty and operations_total is absent; the surface entry set is derived from surface_roots by AST, and a selected symbol without an intent line fails the build.",
+  "provides": "Production secret storage behind the stapel_core.secrets provider seam: VaultSecretProvider reads secrets from OpenBao / HashiCorp Vault KV v2 (token, kubernetes or approle auth, fail-closed, bundle cache, versioned reads), configurable from the environment so it works before Django settings load.",
+  "axes": [],
+  "extension_points": [
+    {
+      "name": "STAPEL_SECRETS_PROVIDER",
+      "kind": "strategy",
+      "summary": "The stapel-core secrets seam this library implements: set it to stapel_vault.VaultSecretProvider in the control-plane process (never inside a workload container) to read secrets from Vault instead of the environment."
+    },
+    {
+      "name": "VAULT_SECRET_MAP",
+      "kind": "setting",
+      "summary": "Per-name location override ({\"NAME\": \"<path>#<key>\"}) for a secret that does not live in the service bundle at <KV_MOUNT>/data/<SECRET_PATH_PREFIX>/<SECRET_APP>."
+    }
+  ],
+  "surface_roots": [
+    {
+      "select": "functions",
+      "path": "config.py"
+    },
+    {
+      "select": "functions",
+      "path": "mapping.py"
+    }
+  ],
+  "surface": {
+    "load_config": {
+      "kind": "factory",
+      "intent": "The resolved VaultConfig (STAPEL_VAULT when Django is configured, else the VAULT_* environment, else defaults; keyword overrides win) — build one here rather than reading the variables yourself, so a tool and the provider agree on address, mount and auth."
+    },
+    "map_name": {
+      "kind": "factory",
+      "intent": "Where a logical secret name lives in KV v2 (mount, path, key) under a config, honouring SECRET_MAP — the one mapping rule, for a tool that writes or audits the secrets the provider will read."
+    }
+  },
+  "requires": [
+    {
+      "module": "stapel-core",
+      "optional": false,
+      "reason": "the stapel_core.secrets provider seam this library plugs into (resolution, caching, fail-closed SecretUnavailable)"
+    }
+  ]
+}

@@ -59,7 +59,7 @@ package-dir = {"stapel_vault" = "."}
 packages = ["stapel_vault"]
 
 [tool.setuptools.package-data]
-stapel_vault = ["py.typed"]
+stapel_vault = ["py.typed", "docs/capabilities.json"]
 
 [tool.ruff]
 target-version = "py311"
