@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.6] — 2026-11-13
+
+### Fixed — the release workflow installs what the capabilities test imports
+
+0.1.5 was tagged but never published: the publish workflow's test job
+installed only pytest, so `tests/test_capabilities.py` (which imports
+stapel-tools) failed there while CI, which installs stapel-tools, was green.
+The publish test job now installs `stapel-tools>=0.27,<1` like CI. 0.1.6
+ships the 0.1.5 content unchanged.
+
 ## [0.1.5] — 2026-11-13
 
 ### Added — `docs/capabilities.json`, emitted and drift-gated

@@ -118,7 +118,7 @@ jobs:
         run: python -c "import stapel_vault; print('import OK')"
 
       - name: Install test dependencies
-        run: pip install pytest pytest-cov
+        run: pip install pytest pytest-cov "stapel-tools>=0.27,<1"
 
       - name: Tests with coverage
         run: |
