@@ -1,6 +1,6 @@
 {
   "module": "stapel-vault",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "provides": "Production secret storage behind the stapel_core.secrets provider seam: VaultSecretProvider reads secrets from OpenBao / HashiCorp Vault KV v2 (token, kubernetes or approle auth, fail-closed, bundle cache, versioned reads), configurable from the environment so it works before Django settings load.",
   "axes": [],
   "extension_points": [

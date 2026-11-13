@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "stapel-vault"
-version = "0.1.4"
+version = "0.1.5"
 description = "Production secret storage for the Stapel framework — OpenBao/HashiCorp Vault behind the stapel-core secret-provider seam"
 readme = "README.md"
 license = { text = "MIT" }
