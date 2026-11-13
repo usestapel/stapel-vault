@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.7] — 2026-11-13
+
+Republish of 0.1.6, unchanged: the 0.1.6 publish run passed every gate and
+then failed on a transient OIDC error at the upload step, so 0.1.6 never
+reached the index.
+
 ## [0.1.6] — 2026-11-13
 
 ### Fixed — the release workflow installs what the capabilities test imports
